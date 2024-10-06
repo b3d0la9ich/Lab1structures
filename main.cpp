@@ -36,10 +36,58 @@ void commands(const string& query){
     }
 }
 
+void loadFromFile(const string& filename){
+    ifstream file(filename);
+    if (!file){
+        cout << "Cant open file:" << filename << endl;
+        return;
+    }
+
+    string line;
+    while (getline(file, line)){
+        commands(line);
+    }
+    file.close();
+}
+
+void saveToFile(const string& filename){
+    ofstream file(filename);
+    if (!file){
+        cout << "Cant open file: " << filename << endl;
+    }
+
+    for (const auto&[name, stack] : stacks){
+        Node* current = stack.top;
+        while (current != nullptr){
+            file << name << " " << current->data << endl;
+        }
+    }
+
+    file.close();
+}
+
 int main(int argc, char* argv[]){
 
+    string filename;
+
+    // Обработка аргументов командной строки
+    for (int i = 1; i < argc; i++) {
+        string arg = argv[i];
+        if (arg == "--file") {
+            if (i + 1 < argc) {
+                filename = argv[++i];
+            }
+        }
+    }
+
+    // Загружаем данные из файла
+    if (!filename.empty()) {
+        loadFromFile(filename);
+    }
+
+    // Интерактивный ввод команд
     string query;
-    cout << "Введите команды (или 'exit' для выхода):" << endl;
+    cout << "Enter command (or 'exit for close terminal'):" << endl;
     while (true) {
         cout << "> ";
         getline(cin, query);
@@ -49,4 +97,10 @@ int main(int argc, char* argv[]){
         commands(query);
     }
 
+    // Сохраняем данные обратно в файл
+    if (!filename.empty()) {
+        saveToFile(filename);
+    }
+    
+    return 0;
 }
