@@ -8,7 +8,8 @@
 
 using namespace std;
 
-map<std::string, Stack> stacks;
+map<string, Stack> stacks;
+map<string, Queue> queues;
 
 void commands(const string& query){
 
@@ -34,6 +35,26 @@ void commands(const string& query){
         ss >> stackName;
         stacks[stackName].display();
     }
+
+    //QueueBro
+    else if(comm == "Qpush"){
+        string queueName;
+        string value;
+        ss >> queueName >> value;
+        queues[queueName].push(value);
+    }
+    else if(comm == "Qpop"){
+        string queueName;
+        string value;
+        ss >> queueName;
+        queues[queueName].pop();
+    }
+    else if(comm == "Qread"){
+        string queueName;
+        ss >> queueName;
+        queues[queueName].display();
+    }
+
 }
 
 void loadFromFile(const string& filename){
@@ -101,6 +122,6 @@ int main(int argc, char* argv[]){
     if (!filename.empty()) {
         saveToFile(filename);
     }
-    
+
     return 0;
 }
