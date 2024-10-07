@@ -13,3 +13,15 @@ struct Stack{
     void pop();
     void display();
 };
+
+struct Queue{
+    Node* head;
+    Node* tail;
+    Queue(){
+        head = nullptr;
+        tail = nullptr;
+    }
+    void push(string value);
+    void pop();
+    void display();
+};
