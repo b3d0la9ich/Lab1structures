@@ -35,7 +35,7 @@ struct singlyList {
             last = newNode;
             return;
         }
-        last->next = newNode; // новый узел добавляется в конец
+        last->next = newNode; // новый узел добавляется в конец                       
         last = newNode; // и становится последним (указатель на новый узел)
     }
 
@@ -45,7 +45,7 @@ struct singlyList {
             first = newNode;
             last = newNode;
         }
-        newNode->next = first; // новый узел привязывается к старому первому элементу
+        newNode->next = first; // новый узел привязывается к старому первому элементу  
         first = newNode; // и становится первым 
     }
 
@@ -55,7 +55,7 @@ struct singlyList {
             return;
         }
         if (first == last){
-            //delFromHead();
+            delFromHead();
             return;
         }
         Node* newNode = first; // создаем указатель на первый узел
@@ -70,37 +70,124 @@ struct singlyList {
     void delFromHead(){
         if (is_empty()){
             cout << "List is empty" << endl;
+            return;
         }
         Node* newNode = first; // новый узел становится первым
         first = newNode->next; // голова указывает на второй узел
         delete newNode; // удаляет старый первый узел
     }
 
-    void delItem(string _item){
-        // в разработке
+    void delItem(string _item){ // удаляет узел по значению
+        if (is_empty()){
+            cout << "List is empty" << endl;
+            return;
+        }
+
+        if (first->item == _item) {
+            delFromHead();
+            return;
+        }
+
+        if (last->item == _item) {
+            delFromEnd();
+            return;
+        }
+
+        Node* prev = first;
+        Node* curr = first->next;
+        while (curr && curr->item != _item){ // пока второй указатель не указывает на nullptr или не равен искомому
+            curr = curr->next;
+            prev = prev ->next;
+        }
+
+        if (!curr) { // если элемент не найден или указатель указывает на nullptr
+            cout << "Element not on the list" << endl;
+            return;
+        }
+        prev->next = curr->next; // предыдущий узел теперь указывает на узел на следущий элемент, после удаляемого
+        delete curr; // удаляем искомый элемент
     }
 
-    void findItem(string _item){
-        // в разработке
+    void findItem(string _item){ // поиск элемента по значению
+        if (is_empty()){
+            cout << "List is empty" << endl;
+            return;
+        }
+        Node* newNode = first;
+        int index = 0;
+        while (newNode && newNode->item != _item){
+            newNode = newNode->next;
+            index++;
+        }
+        if (!newNode){
+            cout << "Element not on the list" << endl;
+            return;
+        }
+        cout << "Index of element: " << index << endl;
     }
 
-    void findIndex(int index){
-        // в разработке
+    void findIndex(int index){ // поиск элемента по индексу
+        if (is_empty()){
+            cout << "List is empty" << endl;
+            return;
+        }
+        Node* newNode = first;
+        for (int i = 0; i < index && newNode; i++){ // пока текущий индекс не будет равен заданному
+            newNode = newNode->next;
+        }
+        if (!newNode){
+            cout << "Element not on the list" << endl;
+        }
+        cout << "Element by index: " << newNode->item << endl;
     }
 
     void printList(){
-        // в разработке
+        if (is_empty()){
+            cout << "List is empty" << endl;
+            return;
+        }
+        Node* newNode = first;
+        while (newNode) {
+            cout << newNode->item << " ";
+            newNode = newNode->next;
+        }
+        cout << endl;
     }
 
-    void loadFromFile(const string& file){
-        // в разработке
+    void loadFromFile(const string& file){ // загрузка данных из файла
+        while (first) { // очищаем текущий лист
+            delFromHead();
+        }
+        ifstream load(file);
+        if (!load) {
+            cout << "Cant open the file" << endl;
+            return;
+        }
+        string str;
+        while (getline(load, str)){
+            addToEnd(str);
+        }
+        load.close();
     }
     
     void saveToFile(const string& file){
-        // в разработке
+        ofstream save(file);
+        if (!save) {
+            cout << "Cant open the file" << endl;
+            return;
+        }
+        Node* newNode = first;
+        while (newNode){ 
+            save << newNode->item << endl;
+            newNode = newNode->next;
+        }
+        save.close();
+        const_cast<singlyList*>(this)->clear();
     }
 
     void clear(){
-        // в разработке
+        while (first){
+            delFromHead();
+        }
     }
 };
