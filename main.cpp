@@ -3,7 +3,9 @@
 #include <fstream>
 
 #include <singly linked list.hpp>
+#include <double linked list.hpp>
 
 using namespace std;
 
-singlyList sList; 
+singlyList sList;
+doubleList dList;
