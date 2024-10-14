@@ -1,87 +1,147 @@
-#include "node.h"
-#include "header.h"
+#pragma once
+#include <iostream>
+#include <string>
+#include <fstream>
 
-void Array::add(int index, string value){
-    if (index < 0 || index > size){
-        cout << "Cant add new elenemnt" << endl;
-        cout << "Error index" << endl;
-        return;
-    }
-    if (size > capacity){
-        cout << "Cant add new element" << endl;
-        cout << "The maximum size has been reached" << endl;
-        return;
+using namespace std;
+
+struct Array {
+    string* arr;
+    size_t size; // текущий размер
+    size_t capacity; // максимальный размер
+
+    Array(size_t cap = 15) : size(0), capacity(cap) {
+        arr = new string[capacity]; // выделение памяти
     }
 
-    Node* newNode = new Node(value);
-    if (index == 0){
-        newNode->next = head;
-        head = newNode;
+    ~Array() {
+        delete[] arr; // освобождение памяти
     }
-    else{
-        Node* current = head;
-        for(int i = 0; i < index - 1; i++){
-            current = current->next;
+
+    void resize(){
+        capacity *= 2; // увеличивает максимальный размер в 2 раза
+        string* newArr = new string[capacity];
+        for (size_t i = 0; i < size; i++){
+            newArr[i] = arr[i];
         }
-        newNode->next = current->next;
-        current->next = newNode;
-    }
-    size++;
-}
-
-void Array::addToEnd(string value){
-    add(size, value);
-}
-
-string Array::get(int index){
-    if (index < 0 || index > size){
-        cout << "Cant get an element" << endl;
-        cout << "Error index" << endl;
-        return "";
-    }
-    Node* current = head;
-    for(int i = 0; i < index; i++){
-            current = current->next;
-    }
-    return current->data;
-}
-
-void Array::remove(int index){
-    if (index < 0 || index > size){
-        cout << "Cant remove an element" << endl;
-        cout << "Error index" << endl;
-        return;
-    }
-    Node* toDelete = nullptr;
-    if (index == 0){
-        toDelete->next = head;
-        head = head->next;
-    }
-}
-
-void Array::replace(int index, string value){
-    if (index < 0 || index >= size){
-        cout << "Cant replace elements" << endl;
-        cout << "Wrong index" << endl;
-        return;
+        delete[] arr;
+        arr = newArr;
     }
 
-    Node* current = head;
-    for (int i = 0; i < index - 1; i++){
-        current = current->next;
+    void addByIndex(const string& item, size_t index){
+        if (index >= size){
+            cout << "Error index" << endl;
+            return;
+        }
+        if (size >= capacity) {
+            resize();
+        }
+        for (size_t i = size; i > index; --i){ // сдвигаем элемент с конца вправо
+            arr[i] = arr[i - 1];
+        }
+        arr[index] = item;
+        size++;
     }
-    current->data = value;
-}
 
-int Array::length(){
-    return size;
-}
-
-void Array::display(){
-    Node* current = head;
-    while (current) {
-        cout << current->data << " ";
-        current = current->next;
+    void addToEnd(const string& item){
+        if (size >= capacity){
+            resize();
+        }
+        arr[size++] = item; // добавляем элемент в конец
     }
-    cout << endl;
-}
+
+    void findByIndex(size_t index){
+        if (size == 0){
+            cout << "Array is empty" << endl;
+            return;
+        }
+        if (index >= size){
+            cout << "Error index" << endl;
+            return;
+        }
+        cout << "Element by index: " << arr[index] << endl;
+    }
+
+    void delByIndex(size_t index){
+        if (size == 0){
+            cout << "Array is empty" << endl;
+            return;
+        }
+        if (index >= size){
+            cout << "Error index" << endl;
+            return;
+        }
+        for (size_t i = index; i < size - 1; i++){ // сдвигаем элементы влево на один
+            arr[i] = arr[i + 1];
+        }
+        size--;
+    }
+
+    void replace(size_t index, const string& item){
+        if (size == 0){
+            cout << "Array is empty" << endl;
+            return;
+        }
+        if (index >= size){
+            cout << "Error index" << endl;
+            return;
+        }
+        arr[index] = item; // замена
+    }
+
+    void length(){
+        cout << "Length of array: " << size << endl;
+    }
+
+    void findByItem(const string* item){
+        if (size == 0){
+            cout << "Array is empty" << endl;
+            return;
+        }
+        for (size_t = 0; i < size; i++){
+            if (arr[i] == item){
+                cout << "Index of element: " << i << endl;
+                return;
+            }
+        }
+        cout << "Element doesnt finded\n";
+    }
+
+    void printArray(){
+        if (size == 0){
+            cout << "Array is empty\n";
+            return;
+        }
+        for (size_t i = 0; i < size; i++){
+            cout << arr[i] << " ";
+        }
+        cout << endl;
+    }
+
+    void loadFromFile(const string& file){
+        size = 0; // очищаем массив
+        ifstream load(file);
+        if (!load.is_open()) { // проверка
+            cout << "Cant open the file\n";
+            return;
+        }
+        string str; // текущая строка данных
+        while (getline(load, str)) {
+            addToEnd(str); // добавляем в конец массива
+        }
+        load.close();
+    }
+
+    void saveToFile(const string& file) { // загрузка данных в файл
+        ofstream save(file);
+        if (!save.is_open()) { // проверка
+            cout << "Cant open the file\n";
+            return;
+        }
+        for (size_t i = 0; i < size; ++i) { // запись в файл
+            save << arr[i] << endl;
+        }
+        save.close();
+        const_cast<Array*>(this)->size = 0; // очистка массива
+    }
+};
