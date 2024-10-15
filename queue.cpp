@@ -1,45 +1,32 @@
-#include "node.h"
-#include "header.h"
+#pragma once
+#include "singly linked list.hpp"
 
 using namespace std;
 
-void Queue::push(string value){
-    Node* node = new Node{value, nullptr};
-    if(head == nullptr){
-        head = node;
-        tail = node;
-    }
-    else{
-        tail->next = node;
-        tail = node;
-    }
-}
+struct Queue {
+    singlyList qList; // используем команды односвязного листа
 
-void Queue::pop(){
-    if (head == nullptr){
-        cout << "Queue is empty" << endl;
-        cout << "Cant delete anything" << endl;
+    void push(string _item) { // добавление элементов в хвост
+        qList.addToEnd(_item);
     }
-    else{
-        Node* temp = head;
-        head = head->next;
-        cout << "Deleted object: " << temp->data << endl;
-        delete temp;
-    }
-}
 
-void Queue::display(){
-    if (head == nullptr){
-        cout << "Queue is empty" << endl;
-        cout << "Cant display anything" << endl;
+    void pop() { // удаление элемента из головы
+        qList.delFromHead();
     }
-    else{
-        cout << "Elements of queue" << endl;
-        Node* current = head;
-        while (current != nullptr){
-            cout << current->data << " ";
-            current = current->next;
-        }
-        cout << endl;
+
+    void findIndex(int index) { // поиск элемента по индексу
+        qList.findIndex(index);
     }
-}
+
+    void printQueue() { // вывод всех элементов очереди
+        qList.printList();
+    }
+
+    void loadFromFile(const string& file) { // загрузка данных из файла
+       qList.loadFromFile(file);
+    }
+
+    void saveToFile(const string& file) { // сохранение в файл
+        qList.saveToFile(file);
+    }
+};
