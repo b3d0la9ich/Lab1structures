@@ -6,7 +6,7 @@
 using namespace std;
 
 struct Array {
-    string* arr;
+    string* arr; // динамический массив строк
     size_t size; // текущий размер
     size_t capacity; // максимальный размер
 
@@ -93,18 +93,18 @@ struct Array {
         cout << "Length of array: " << size << endl;
     }
 
-    void findByItem(const string* item){
-        if (size == 0){
-            cout << "Array is empty" << endl;
+    void findByItem(const string& item) { // чтение (поиск элемента по значению)
+        if (size == 0) { // проверка на пустоту
+            cout << "Array is empty\n";
             return;
         }
-        for (size_t = 0; i < size; i++){
-            if (arr[i] == item){
+        for (size_t i = 0; i < size; i++) { // проходимся по массиву
+            if (arr[i] == item) {
                 cout << "Index of element: " << i << endl;
                 return;
             }
         }
-        cout << "Element doesnt finded\n";
+        cout << "No such element\n";
     }
 
     void printArray(){
