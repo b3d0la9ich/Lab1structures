@@ -24,7 +24,7 @@ struct doubleList {
 
     void clear() {
         while (first){
-            //delFromHead();
+            delFromHead();
         }
     }
 
