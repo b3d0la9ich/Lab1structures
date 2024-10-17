@@ -10,12 +10,12 @@ struct Node {
     Node(const string& value, Node* nextNode = nullptr) : data(value), next(nextNode) {}
 };
 
-struct DoubleNode {
+struct DoublyNode {
     string data;
-    DoubleNode* next;
-    DoubleNode* prev;
+    DoublyNode* next;
+    DoublyNode* prev;
 
-    DoubleNode(const string& value, DoubleNode* nextNode = nullptr, DoubleNode* prevNode = nullptr) : data(value), next(nextNode), prev(prevNode) {}
+    DoublyNode(const string& value, DoublyNode* nextNode = nullptr, DoublyNode* prevNode = nullptr) : data(value), next(nextNode), prev(prevNode) {}
 };
 
 struct tree_node {
