@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void processQuery(const string& query, SinglyLinkedList& singlyList, DoublyLinkedList& doublyList){
+void processQuery(const string& query, SinglyLinkedList& singlyList, DoublyLinkedList& doublyList, Stack& stack){
     vector<string> tokens;
     stringstream ss(query);
     string token;
@@ -85,6 +85,20 @@ void processQuery(const string& query, SinglyLinkedList& singlyList, DoublyLinke
             cout << "Error: LDDELVALUE requires 1 argument..." << endl;
         }
     }
+
+    // Stack
+    else if (tokens[0] == "SPUSH") {
+        if (tokens.size() == 2){
+            string value = tokens[1];
+            stack.push(value);
+        }
+        else {
+            cout << "Error: SPUSH requires 1 argument..." << endl;
+        }
+    }
+    else if (tokens[0] == "SPOP"){
+        stack.pop();
+    }
 }
 
 int main(int argc, char* argv[]) {
@@ -92,6 +106,7 @@ int main(int argc, char* argv[]) {
     string filename;
     SinglyLinkedList singlyList;
     DoublyLinkedList doublyList;
+    Stack stack;
 
     // Чтение аргументов командной строки
     for (int i = 1; i < argc; i++){
@@ -115,14 +130,19 @@ int main(int argc, char* argv[]) {
         }
 
         // Проверка команд для doubly linked list
-        if (command[0] == 'L' && command[1] == 'D'){
+        else if (command[0] == 'L' && command[1] == 'D'){
             doublyList.loadFromFile(filename);
+        }
+
+        // Проверка команд для stack
+        else if (command[0] == 'S'){
+            stack.loadFromFile(filename);
         }
     }
 
     // Выполнение запроса
     if (!query.empty()){
-        processQuery(query, singlyList, doublyList);
+        processQuery(query, singlyList, doublyList, stack);
     }
     else {
         cout << "Error: query not specified..." << endl;
@@ -141,8 +161,13 @@ int main(int argc, char* argv[]) {
         }
 
         // Проверка команд для doubly linked list
-        if (command[0] == 'L' && command[1] == 'D'){
+        else if (command[0] == 'L' && command[1] == 'D'){
             doublyList.saveToFile(filename);
+        }
+
+        // Проверка команд для stack
+        else if (command[0] == 'S'){
+            stack.saveToFile(filename);
         }
     }
     return 0;

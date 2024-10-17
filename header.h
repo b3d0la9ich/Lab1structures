@@ -38,3 +38,16 @@ struct DoublyLinkedList {
     void saveToFile(const string& filename);
     void loadFromFile(const string& filename);
 };
+
+struct Stack {
+    Node* top;
+    int size;
+
+    Stack() : top(nullptr), size(0) {}
+
+    void push(string value);
+    void pop();
+    void print();
+    void saveToFile(const string& filename);
+    void loadFromFile(const string& filename);
+};
