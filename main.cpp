@@ -51,3 +51,53 @@ void processQuery(const string& query, SinglyLinkedList& singlyList){
         }
     }
 }
+
+int main(int argc, char* argv[]) {
+    string query;
+    string filename;
+    SinglyLinkedList singlyList;
+
+    // Чтение аргументов командной строки
+    for (int i = 1; i < argc; i++){
+        string arg = argv[i];
+        if (arg == "--file" && i + 1 < argc){
+            filename = argv[++i];
+        }
+        if (arg == "--query" && i + 1 < argc){
+            query = argv[++i];
+        }
+    }
+
+    if (!filename.empty() && !query.empty()){
+        stringstream ss(query);
+        string command;
+        ss >> command;
+
+        //Проверка команд для singly linked list
+        if (command[0] == 'L' && command[1] == 'S'){
+            singlyList.loadFromFile(filename);
+        }
+    }
+
+    // Выполнение запроса
+    if (!query.empty()){
+        processQuery(query, singlyList);
+    }
+    else {
+        cout << "Error: query not specified..." << endl;
+        return 1;
+    }
+
+    // Сохранение данных для структур
+    if (!filename.empty() && !query.empty()){
+        stringstream ss(query);
+        string command;
+        ss >> command;
+
+        // Проверка команд для singly linked list
+        if (command[0] == 'L' && command[1] == 'S') {
+            singlyList.saveToFile(filename);
+        }
+    }
+    return 0;
+}
