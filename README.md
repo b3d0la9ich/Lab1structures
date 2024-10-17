@@ -1,2 +1,2 @@
 # Lab1structures
-Structures
+HOHOHO
