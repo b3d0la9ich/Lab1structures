@@ -51,3 +51,17 @@ struct Stack {
     void saveToFile(const string& filename);
     void loadFromFile(const string& filename);
 };
+
+struct Queue {
+    Node* front;
+    Node* end;
+    int size;
+
+    Queue() : front(nullptr), end(nullptr), size(0) {}
+
+    void push(string value);
+    void pop();
+    void print();
+    void saveToFile(const string& filename);
+    void loadFromFile(const string& filename);
+};

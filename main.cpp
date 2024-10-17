@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void processQuery(const string& query, SinglyLinkedList& singlyList, DoublyLinkedList& doublyList, Stack& stack){
+void processQuery(const string& query, SinglyLinkedList& singlyList, DoublyLinkedList& doublyList, Stack& stack, Queue queue){
     vector<string> tokens;
     stringstream ss(query);
     string token;
@@ -99,6 +99,20 @@ void processQuery(const string& query, SinglyLinkedList& singlyList, DoublyLinke
     else if (tokens[0] == "SPOP"){
         stack.pop();
     }
+
+    // Queue
+    else if (tokens[0] == "QPUSH"){
+        if (tokens.size() == 2){
+            string value = tokens[1];
+            stack.push(value);
+        }
+        else {
+            cout << "Error: QPUSH requires 1 argument..." << endl;
+        }
+    }
+    else if (tokens[0] == "QPOP"){
+        queue.pop();
+    }
 }
 
 int main(int argc, char* argv[]) {
@@ -107,6 +121,7 @@ int main(int argc, char* argv[]) {
     SinglyLinkedList singlyList;
     DoublyLinkedList doublyList;
     Stack stack;
+    Queue queue;
 
     // Чтение аргументов командной строки
     for (int i = 1; i < argc; i++){
@@ -138,11 +153,16 @@ int main(int argc, char* argv[]) {
         else if (command[0] == 'S'){
             stack.loadFromFile(filename);
         }
+
+        // Проверка команд для queue
+        else if (command[0] == 'Q'){
+            queue.loadFromFile(filename);
+        }
     }
 
     // Выполнение запроса
     if (!query.empty()){
-        processQuery(query, singlyList, doublyList, stack);
+        processQuery(query, singlyList, doublyList, stack, queue);
     }
     else {
         cout << "Error: query not specified..." << endl;
@@ -168,6 +188,11 @@ int main(int argc, char* argv[]) {
         // Проверка команд для stack
         else if (command[0] == 'S'){
             stack.saveToFile(filename);
+        }
+
+        // Проверка команд для queue
+        else if (command[0] == 'Q'){
+            queue.saveToFile(filename);
         }
     }
     return 0;
