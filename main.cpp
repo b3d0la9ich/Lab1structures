@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void processQuery(const string& query, SinglyLinkedList& singlyList){
+void processQuery(const string& query, SinglyLinkedList& singlyList, DoublyLinkedList& doublyList){
     vector<string> tokens;
     stringstream ss(query);
     string token;
@@ -16,7 +16,7 @@ void processQuery(const string& query, SinglyLinkedList& singlyList){
         tokens.push_back(token);
     }
 
-    // SinglyLinkedList
+    // Singly linked list
     if (tokens[0] == "LSADDHEAD") {
         if (tokens.size() == 2){
             string value = tokens[1];
@@ -50,12 +50,48 @@ void processQuery(const string& query, SinglyLinkedList& singlyList){
             cout << "Error: LSDELVALUE requires 1 argument..." << endl;
         }
     }
+
+    // Doubly linked list
+    else if (tokens[0] == "LDADDHEAD"){
+        if (tokens.size() == 2){
+            string value = tokens[1];
+            doublyList.addToHead(value);
+        }
+        else {
+            cout << "Error: LDADDHEAD requires 1 argument..." << endl;
+        }
+    }
+    else if (tokens[0] == "LDADDTAIL"){
+        if (tokens.size() == 2){
+            string value = tokens[1];
+            doublyList.addToTail(value);
+        }
+        else {
+            cout << "Error: LDADDTAIL requires 1 argument..." << endl;
+        }
+    }
+    else if (tokens[0] == "LDDELHEAD"){
+        doublyList.removeFromHead();
+    }
+    else if (tokens[0] == "LDDELTAIL"){
+        doublyList.removeFromTail();
+    }
+    else if (tokens[0] == "LDDVALUE"){
+        if (tokens.size() == 2){
+            string value = tokens[1];
+            doublyList.removeByValue(value);
+        }
+        else {
+            cout << "Error: LDDELVALUE requires 1 argument..." << endl;
+        }
+    }
 }
 
 int main(int argc, char* argv[]) {
     string query;
     string filename;
     SinglyLinkedList singlyList;
+    DoublyLinkedList doublyList;
 
     // Чтение аргументов командной строки
     for (int i = 1; i < argc; i++){
@@ -73,15 +109,20 @@ int main(int argc, char* argv[]) {
         string command;
         ss >> command;
 
-        //Проверка команд для singly linked list
+        // Проверка команд для singly linked list
         if (command[0] == 'L' && command[1] == 'S'){
             singlyList.loadFromFile(filename);
+        }
+
+        // Проверка команд для doubly linked list
+        if (command[0] == 'L' && command[1] == 'D'){
+            doublyList.loadFromFile(filename);
         }
     }
 
     // Выполнение запроса
     if (!query.empty()){
-        processQuery(query, singlyList);
+        processQuery(query, singlyList, doublyList);
     }
     else {
         cout << "Error: query not specified..." << endl;
@@ -97,6 +138,11 @@ int main(int argc, char* argv[]) {
         // Проверка команд для singly linked list
         if (command[0] == 'L' && command[1] == 'S') {
             singlyList.saveToFile(filename);
+        }
+
+        // Проверка команд для doubly linked list
+        if (command[0] == 'L' && command[1] == 'D'){
+            doublyList.saveToFile(filename);
         }
     }
     return 0;

@@ -20,3 +20,21 @@ struct SinglyLinkedList {
     void saveToFile(const string& filename);
     void loadFromFile(const string& filename);
 };
+
+struct DoublyLinkedList {
+    DoublyNode* head;
+    DoublyNode* tail;
+    int size;
+
+    DoublyLinkedList() : head(nullptr), tail(nullptr), size(0) {}
+
+    void addToHead(string value);
+    void addToTail(string value);
+    void removeFromHead();
+    void removeFromTail();
+    void removeByValue(string value);
+    DoublyNode* search(string value);
+    void print();
+    void saveToFile(const string& filename);
+    void loadFromFile(const string& filename);
+};
