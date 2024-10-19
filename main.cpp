@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void processQuery(const string& query, SinglyLinkedList& singlyList, DoublyLinkedList& doublyList, Stack& stack, Queue queue){
+void processQuery(const string& query, SinglyLinkedList& singlyList, DoublyLinkedList& doublyList, Stack& stack, Queue& queue, Array& array){
     vector<string> tokens;
     stringstream ss(query);
     string token;
@@ -113,6 +113,56 @@ void processQuery(const string& query, SinglyLinkedList& singlyList, DoublyLinke
     else if (tokens[0] == "QPOP"){
         queue.pop();
     }
+
+    // Array
+    else if (tokens[0] == "MPUSH"){
+        if (tokens.size() == 3){
+            int index = stoi(tokens[1]);
+            string value = tokens[2];
+            array.add(index, value);
+        }
+        else {
+            cout << "Error: MPUSH requires 2 arguments..." << endl;
+        }
+    }
+    else if (tokens[0] == "MDEL"){
+        if (tokens.size() == 2){
+            int index = stoi(tokens[1]);
+            array.remove(index);
+        }
+        else {
+            cout << "Error: MDEL requires 1 argument..." << endl;
+        }
+    }
+    else if (tokens[0] == "MGET"){
+        if (tokens.size() == 2){
+            int index = stoi(tokens[1]);
+            string value = array.get(index);
+            cout << "Element at index" << index << ": " << value << endl;
+        }
+        else {
+            cout << "Error: MGET requires 1 argument..." << endl;
+        }
+    }
+    else if (tokens[0] == "MADD") {
+        if (tokens.size() == 2){
+            string value = tokens[1];
+            array.addToEnd(value);
+        }
+        else {
+            cout << "Error: MADD requires 1 argument..." << endl;
+        }
+    }
+    else if (tokens[0] == "MREPLACE"){
+        if (tokens.size() == 3){
+            int index = stoi(tokens[1]);
+            string value = tokens[2];
+            array.replace(index, value);
+        }
+        else {
+            cout << "Error: MREPLACE requires 2 arguments..." << endl;
+        }
+    }
 }
 
 int main(int argc, char* argv[]) {
@@ -122,6 +172,7 @@ int main(int argc, char* argv[]) {
     DoublyLinkedList doublyList;
     Stack stack;
     Queue queue;
+    Array array(10);
 
     // Чтение аргументов командной строки
     for (int i = 1; i < argc; i++){
@@ -158,11 +209,16 @@ int main(int argc, char* argv[]) {
         else if (command[0] == 'Q'){
             queue.loadFromFile(filename);
         }
+
+        // Проверка команд для array
+        else if (command[0] == 'M'){
+            stack.loadFromFile(filename);
+        }
     }
 
     // Выполнение запроса
     if (!query.empty()){
-        processQuery(query, singlyList, doublyList, stack, queue);
+        processQuery(query, singlyList, doublyList, stack, queue, array);
     }
     else {
         cout << "Error: query not specified..." << endl;
@@ -193,6 +249,11 @@ int main(int argc, char* argv[]) {
         // Проверка команд для queue
         else if (command[0] == 'Q'){
             queue.saveToFile(filename);
+        }
+
+        // Проверка команд для array
+        else if (command[0] == 'M'){
+            array.saveToFile(filename);
         }
     }
     return 0;

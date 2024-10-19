@@ -65,3 +65,22 @@ struct Queue {
     void saveToFile(const string& filename);
     void loadFromFile(const string& filename);
 };
+
+struct Array {
+    string* data;
+    int size;
+    int maxCapacity;
+
+    Array(int max);
+    ~Array();
+
+    void add(int index, string value);
+    void addToEnd(string value);
+    string get(int index);
+    void remove(int index);
+    void replace(int index, string value);
+    int length();
+    void print();
+    void saveToFile(const string& filename);
+    void loadFromFile(const string& filename);
+};
