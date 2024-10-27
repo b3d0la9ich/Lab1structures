@@ -212,7 +212,7 @@ int main(int argc, char* argv[]) {
 
         // Проверка команд для array
         else if (command[0] == 'M'){
-            stack.loadFromFile(filename);
+            array.loadFromFile(filename);
         }
     }
 
