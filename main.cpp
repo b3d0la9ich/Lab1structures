@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void processQuery(const string& query, SinglyLinkedList& singlyList, DoublyLinkedList& doublyList, Stack& stack, Queue& queue, Array& array){
+void processQuery(const string& query, SinglyLinkedList& singlyList, DoublyLinkedList& doublyList, Stack& stack, Queue& queue, Array& array, HashTable& hash){
     vector<string> tokens;
     stringstream ss(query);
     string token;
@@ -163,6 +163,32 @@ void processQuery(const string& query, SinglyLinkedList& singlyList, DoublyLinke
             cout << "Error: MREPLACE requires 2 arguments..." << endl;
         }
     }
+
+    // HashTable
+    else if (tokens[0] == "HSET"){
+        if (tokens.size() == 3){
+            string key = tokens[1];
+            string value = tokens[2];
+            hash.insert(key, value);
+        }
+        else {
+            cout << "Error: HSET command requires 2 arguments" << endl;
+        }
+    } else if (tokens[0] == "HGET") {
+        if (tokens.size() == 2) {
+            string key = tokens[1];
+            hash.get(key);
+        }
+    } else if (tokens[0] == "HDEL") {
+        if (tokens.size() == 2) {
+            string key = tokens[1];
+            hash.remove(key);
+        } else {
+            cout << "Error: HDEL command requires 1 argument" << endl;
+        }
+    } else if (tokens[0] == "HPRINT"){
+        hash.printh();
+    }
 }
 
 int main(int argc, char* argv[]) {
@@ -173,6 +199,7 @@ int main(int argc, char* argv[]) {
     Stack stack;
     Queue queue;
     Array array(10);
+    HashTable hash;
 
     // Чтение аргументов командной строки
     for (int i = 1; i < argc; i++){
@@ -214,11 +241,17 @@ int main(int argc, char* argv[]) {
         else if (command[0] == 'M'){
             array.loadFromFile(filename);
         }
+
+        // ПРоеврка команд для hashtable
+        else if (command[0] == 'H'){
+            hash.loadFromFile(filename);
+        }
+
     }
 
     // Выполнение запроса
     if (!query.empty()){
-        processQuery(query, singlyList, doublyList, stack, queue, array);
+        processQuery(query, singlyList, doublyList, stack, queue, array, hash);
     }
     else {
         cout << "Error: query not specified..." << endl;
@@ -254,6 +287,11 @@ int main(int argc, char* argv[]) {
         // Проверка команд для array
         else if (command[0] == 'M'){
             array.saveToFile(filename);
+        }
+
+        // Проверка команд для hashtable
+        else if (command[0] == 'H'){
+            hash.saveToFile(filename);
         }
     }
     return 0;

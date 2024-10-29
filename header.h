@@ -84,3 +84,28 @@ struct Array {
     void saveToFile(const string& filename);
     void loadFromFile(const string& filename);
 };
+
+struct HashNode {
+    string key;
+    string value;
+    HashNode* next;
+
+    HashNode(const string& k, const string& v) : key(k), value(v), next(nullptr) {}
+};
+
+struct HashTable {
+    static const int tablesize = 10;
+    HashNode* table[tablesize];
+
+    HashTable();
+    ~HashTable();
+
+    int hashfunction(const string& key);
+    
+    void insert(const string& key, const string& value);
+    void get(const string& key);
+    void remove(const string& key);
+    void printh();
+    void saveToFile(const string& filename);
+    void loadFromFile(const string& filename);
+};
