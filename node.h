@@ -18,60 +18,67 @@ struct DoublyNode {
     DoublyNode(const string& value, DoublyNode* nextNode = nullptr, DoublyNode* prevNode = nullptr) : data(value), next(nextNode), prev(prevNode) {}
 };
 
-struct tree_node {
+struct HashNode {
+    string key;
+    string value;
+    HashNode* next;
+
+    HashNode(const string& k, const string& v) : key(k), value(v), next(nullptr) {}
+};
+
+struct TreeNode { // узел бинарного дерева
     int digit;
-    tree_node* right;
-    tree_node* left;
+    TreeNode* left;
+    TreeNode* right;
 
-    tree_node(int dig) : digit(dig), left(nullptr), right(nullptr) {}
+    TreeNode(int dig) : digit(dig), left(nullptr), right(nullptr) {}
 };
 
-struct Queue_node {
-    tree_node* tree;
-    Queue_node* next;
+struct QueueNode { // узел очереди
+    TreeNode* tree; // указатель на узел бинарного дерева
+    QueueNode* next;
 };
 
-struct queue_tree {
-    Queue_node* front;
-    Queue_node* rear;
+struct QueueTree { // очередь для работы с узлами деревьев
+    QueueNode* front;
+    QueueNode* rear;
     int count;
 
-    queue_tree() : front(nullptr), rear(nullptr), count(0) {}
+    QueueTree() : front(nullptr), rear(nullptr), count(0) {}
 
     bool is_empty(){
         return count == 0;
     }
 
-    void enqueue(tree_node* node){
-        Queue_node* new_node = new Queue_node();
-        new_node->tree = node;
-        new_node->next = nullptr;
+    void enqueue(TreeNode* node) { // добавляет узел дерева в конец очереди
+        QueueNode* newNode = new QueueNode();
+        newNode->tree = node;   
+        newNode->next = nullptr;
 
-        if (rear == nullptr) {
-            front = rear = new_node;
-        }
-        else {
-            rear->next = new_node;
-            rear = new_node;
+        if (rear == nullptr){ // если очередь пуста
+            front = rear = newNode;
+        } else {
+            rear->next = newNode;
+            rear = newNode;
         }
 
         count++;
     }
 
-    tree_node* dequeue(){
+    TreeNode* dequeue() { // удаляет узел из начала очереди и возвращает указатель на дерево
         if (is_empty()){
             return nullptr;
         }
 
-        Queue_node* new_node = front;
-        tree_node* res = front->tree;
+        QueueNode* newNode = front;
+        TreeNode* res = front->tree;
         front = front->next;
 
-        if (front == nullptr) {
+        if (front == nullptr){
             rear = nullptr;
         }
 
-        delete new_node;
+        delete newNode;
         count--;
         return res;
     }

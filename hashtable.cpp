@@ -88,7 +88,7 @@ void HashTable::remove(const string& key){
     cout << "Key doenst finded for del";
 }
 
-void HashTable::printh(){
+void HashTable::print(){
     for (int i = 0; i < tablesize; i++){
         if (table[i]){
             HashNode* curr = table[i];

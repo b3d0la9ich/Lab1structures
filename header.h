@@ -85,14 +85,6 @@ struct Array {
     void loadFromFile(const string& filename);
 };
 
-struct HashNode {
-    string key;
-    string value;
-    HashNode* next;
-
-    HashNode(const string& k, const string& v) : key(k), value(v), next(nullptr) {}
-};
-
 struct HashTable {
     static const int tablesize = 10;
     HashNode* table[tablesize];
@@ -105,7 +97,22 @@ struct HashTable {
     void insert(const string& key, const string& value);
     void get(const string& key);
     void remove(const string& key);
-    void printh();
+    void print();
     void saveToFile(const string& filename);
     void loadFromFile(const string& filename);
+};
+
+struct CBTree {
+    TreeNode* root;
+    CBTree() : root(nullptr) {}
+
+    void insert(int digit);
+    bool is_CBT();
+    bool get_value(int value);
+    void find_index(int index);
+    bool find_value(TreeNode* current, int value);
+    void display();
+    void saveToFile(const string& filename);
+    void loadFromFile(const string& filename);
+    void print_CBT(TreeNode* current, int level);
 };

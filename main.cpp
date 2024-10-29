@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void processQuery(const string& query, SinglyLinkedList& singlyList, DoublyLinkedList& doublyList, Stack& stack, Queue& queue, Array& array, HashTable& hash){
+void processQuery(const string& query, SinglyLinkedList& singlyList, DoublyLinkedList& doublyList, Stack& stack, Queue& queue, Array& array, HashTable& hash, CBTree& CBTree){
     vector<string> tokens;
     stringstream ss(query);
     string token;
@@ -187,7 +187,47 @@ void processQuery(const string& query, SinglyLinkedList& singlyList, DoublyLinke
             cout << "Error: HDEL command requires 1 argument" << endl;
         }
     } else if (tokens[0] == "HPRINT"){
-        hash.printh();
+        hash.print();
+    }
+
+    // CBTree
+    else if (tokens[0] == "TINSERT"){
+        if (tokens.size() == 2) {
+            int digit = stoi(tokens[1]);
+            CBTree.insert(digit);
+        } else {
+            cout << "Error: TINSERT command requires 1 argument" << endl;
+        }
+    } else if (tokens[0] == "TISCBT"){
+        if (CBTree.is_CBT()) {
+            cout << "The tree is complete binary tree" << endl;
+        } else {
+            cout << "The tree is not a complete binary tree" << endl;
+        }
+    } else if (tokens[0] == "TFIND") {
+        if (tokens.size() == 2) {
+            int value = stoi(tokens[1]);
+            if (CBTree.get_value(value)) {
+                cout << "Value" << value << "found in the tree" << endl;
+            } else {
+                cout << "Value" << value << "not found in the tree" << endl;
+            }
+        } else {
+            cout << "Error: TFIND command requires 1 argument" << endl;
+        }
+    } else if (tokens[0] == "TDISPLAY"){
+        CBTree.display();
+    }
+
+    else if (tokens[0] == "PRINT"){
+        array.print();
+        stack.print();
+        queue.print();
+        singlyList.print();
+        doublyList.print();
+        hash.print();
+    } else {
+        cout << "Unknown command: " << tokens[0] << endl;
     }
 }
 
@@ -200,6 +240,7 @@ int main(int argc, char* argv[]) {
     Queue queue;
     Array array(10);
     HashTable hash;
+    CBTree CBTree;
 
     // Чтение аргументов командной строки
     for (int i = 1; i < argc; i++){
@@ -247,11 +288,15 @@ int main(int argc, char* argv[]) {
             hash.loadFromFile(filename);
         }
 
+        // Проверка команд для CBTree
+        else if (command[0] == 'T') {
+            CBTree.loadFromFile(filename);
+        }
     }
 
     // Выполнение запроса
     if (!query.empty()){
-        processQuery(query, singlyList, doublyList, stack, queue, array, hash);
+        processQuery(query, singlyList, doublyList, stack, queue, array, hash, CBTree);
     }
     else {
         cout << "Error: query not specified..." << endl;
@@ -292,6 +337,10 @@ int main(int argc, char* argv[]) {
         // Проверка команд для hashtable
         else if (command[0] == 'H'){
             hash.saveToFile(filename);
+        }
+
+        else if (command[0] == 'T') {
+            CBTree.saveToFile(filename);
         }
     }
     return 0;
